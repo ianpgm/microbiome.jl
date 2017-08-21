@@ -25,8 +25,8 @@ joinpath(source_dir, "rarefaction.jl") |> include
 joinpath(source_dir, "beta_diversity.jl") |> include
 
 #Plotting
-joinpath(source_dir, "plotting.jl") |> include
-joinpath(source_dir, "deseq2_processing.jl") |> include
+#joinpath(source_dir, "plotting.jl") |> include
+#joinpath(source_dir, "deseq2_processing.jl") |> include
 
 function export_ancom_wide_format(OTU_table::DataFrame,metadata::DataFrame,attribute::Symbol,filename::String)
     rotated_OTU_table = convert(Array,OTU_table[filter(name->name!=:OTU,names(OTU_table))])' |> DataFrame
