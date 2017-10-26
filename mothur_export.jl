@@ -26,6 +26,9 @@ function export_mothur_data(microbiome::microbiome_data,file_prefix::AbstractStr
     taxonomy_table = make_mothur_taxonomy_df(microbiome.tax)
     writetable_noquotes(file_prefix*".shared",shared_table)
     writetable_noquotes(file_prefix*".cons.taxonomy",taxonomy_table)
+    if size(microbiome.meta)[1] > 0
+        writetable_noquotes(file_prefix*".metadata",microbiome.meta)
+    end
 end
 
 function writetable_noquotes(filename::AbstractString,input_df::DataFrame)

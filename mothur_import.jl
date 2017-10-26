@@ -32,8 +32,20 @@ function import_mothur_taxonomy_file(taxonomy_file::AbstractString, taxonomic_le
     return taxonomy_table_with_split_taxa
 end
 
+function import_mothur_data(shared_file::AbstractString,taxonomy_file::AbstractString,metadata_file::AbstractString;taxonomic_levels::Int64=6)
+    data = microbiome_data(import_mothur_shared_file(shared_file::AbstractString),import_mothur_taxonomy_file(taxonomy_file::AbstractString, taxonomic_levels),readtable(metadata_file,separator='\t',header=true))
+    otu_length = string(length(data.otu[:OTU]))
+    if Set(data.otu[:OTU]) == Set(data.tax[:OTU])
+        println("$otu_length OTUs found in both shared and taxonomy files.")
+    else
+        error("OTU identifiers do not match in shared and taxonomy files. $otu_length OTUs found in shared file and "*string(length(data.tax[:OTU]))*" OTUs found in taxonomy file.")
+    end
+    println(string(length(names(data.otu))-1)*" samples found in shared file.")
+    return data
+end
+
 function import_mothur_data(shared_file::AbstractString,taxonomy_file::AbstractString;taxonomic_levels::Int64=6)
-    data = microbiome_data(import_mothur_shared_file(shared_file::AbstractString),import_mothur_taxonomy_file(taxonomy_file::AbstractString, taxonomic_levels))
+    data = microbiome_data(import_mothur_shared_file(shared_file::AbstractString),import_mothur_taxonomy_file(taxonomy_file::AbstractString, taxonomic_levels),DataFrame(),DataFrame())
     otu_length = string(length(data.otu[:OTU]))
     if Set(data.otu[:OTU]) == Set(data.tax[:OTU])
         println("$otu_length OTUs found in both shared and taxonomy files.")

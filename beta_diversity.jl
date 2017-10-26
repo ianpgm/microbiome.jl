@@ -8,3 +8,22 @@ function bray_curtis(OTU_table::DataFrame,samples::Array{Symbol,1})
     BC = 1 - ((2*C)/(Si +Sj))
     return BC
 end
+
+function bray_curtis(sample_i::Array{Int64,1},sample_j::Array{Int64,1})
+    Si = sum(sample_i)
+    Sj = sum(sample_j)
+    Cij = 0
+    for (i,j) in zip(sample_i,sample_j)
+        if i > 0 && j > 0
+            if i <= j
+                Cij = Cij + i
+            elseif j < i
+                Cij = Cij + j
+            end
+        end
+    end
+
+    BC = 1-(2*Cij)/(Si+Sj)
+
+    return BC
+end
